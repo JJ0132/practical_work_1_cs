@@ -1,1 +1,0 @@
-This document is temporal for having the src solution folder.
