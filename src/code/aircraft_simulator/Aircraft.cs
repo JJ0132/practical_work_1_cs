@@ -1,3 +1,4 @@
+using System.Data;
 using System.Data.Common;
 
 public enum EStatus
@@ -94,5 +95,15 @@ public class CommercialAircraft : Aircraft
     public CommercialAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, int numOfPassengers) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
     {
         this.numOfPassengers = numOfPassengers;
+    }
+}
+
+public class CargoAircraft : Aircraft
+{
+    private double MaximumLoad;
+
+    public CargoAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, double MaximumLoad) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    {
+        this.MaximumLoad = MaximumLoad;
     }
 }
