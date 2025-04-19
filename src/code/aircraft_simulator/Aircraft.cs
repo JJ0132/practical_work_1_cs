@@ -107,3 +107,13 @@ public class CargoAircraft : Aircraft
         this.MaximumLoad = MaximumLoad;
     }
 }
+
+public class PrivateAircraft : Aircraft
+{
+    private string Owner;
+
+    PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    {
+        this.Owner = Owner;
+    }
+}
