@@ -86,3 +86,13 @@ public abstract class Aircraft
     }
 
 }
+
+public class CommercialAircraft : Aircraft
+{
+    private int numOfPassengers;
+
+    public CommercialAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, int numOfPassengers) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    {
+        this.numOfPassengers = numOfPassengers;
+    }
+}
