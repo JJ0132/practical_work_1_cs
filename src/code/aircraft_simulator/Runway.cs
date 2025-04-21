@@ -1,3 +1,5 @@
+namespace airport_sim;
+
 public enum RunwayStatus
 {
     Free,

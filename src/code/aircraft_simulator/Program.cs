@@ -14,7 +14,7 @@ public class Program
         Console.WriteLine("Choose an option: ");
         Console.WriteLine("");
         Console.WriteLine("1. Load flights from file");
-        Console.WriteLine("2. Lead a flight manueally");
+        Console.WriteLine("2. Load a flight manueally");
         Console.WriteLine("3. Start simulation (manual)");
         Console.WriteLine("4. Start simulation (automatic)");
         Console.WriteLine("5. Exit");

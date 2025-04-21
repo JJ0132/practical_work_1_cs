@@ -1,5 +1,6 @@
 using System.Data;
 using System.Data.Common;
+namespace airport_sim;
 
 public enum EStatus
 {
