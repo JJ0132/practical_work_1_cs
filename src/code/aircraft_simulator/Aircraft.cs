@@ -1,7 +1,3 @@
-using System.Data;
-using System.Data.Common;
-namespace airport_sim;
-
 public enum EStatus
 {
     InFlight,
@@ -26,7 +22,7 @@ public abstract class Aircraft
     //in liters
     private double CurrentFuel;
 
-
+    
     public Aircraft(string id,int Distance,int Speed, double FuelCapacity,double FuelConsumption,double CurrentFuel)
     {
         this.Status = EStatus.InFlight;
@@ -36,8 +32,19 @@ public abstract class Aircraft
         this.FuelCapacity= FuelCapacity;
         this.FuelConsumption = FuelConsumption;
         this.CurrentFuel = CurrentFuel;
-        
     }
+
+    public Aircraft(string id,int Distance,int Speed, double FuelCapacity,double FuelConsumption, EStatus Status)
+    {
+        this.Status = Status;
+        this.ID = id;
+        this.Distance = Distance;
+        this.Speed = Speed;
+        this.FuelCapacity= FuelCapacity;
+        this.FuelConsumption = FuelConsumption;
+        this.CurrentFuel = FuelCapacity;
+    }
+
     public string getID()
     {
         return this.ID;
@@ -68,6 +75,11 @@ public abstract class Aircraft
     }
     public void setDistance(int d)
     {
+        if(d < 0)
+        {
+            d = 0;
+        }
+
         this.Distance = d;
     }
     public void setSpeed(int d)
@@ -84,37 +96,23 @@ public abstract class Aircraft
     }
     public void setCurrentFuel(double d)
     {
+        if(d < 0)
+        {
+            d = 0;
+        }
+        
         this.CurrentFuel = d;
     }
 
-}
-
-public class CommercialAircraft : Aircraft
-{
-    private int numOfPassengers;
-
-    public CommercialAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, int numOfPassengers) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    public void setStatus(EStatus e)
     {
-        this.numOfPassengers = numOfPassengers;
+        this.Status = e;
     }
-}
 
-public class CargoAircraft : Aircraft
-{
-    private double MaximumLoad;
-
-    public CargoAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, double MaximumLoad) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    public EStatus getStatus()
     {
-        this.MaximumLoad = MaximumLoad;
+        return this.Status;
     }
-}
 
-public class PrivateAircraft : Aircraft
-{
-    private string Owner;
-
-    PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
-    {
-        this.Owner = Owner;
-    }
+    public abstract void ShowInfo();
 }
