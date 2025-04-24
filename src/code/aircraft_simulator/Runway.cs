@@ -14,6 +14,7 @@ public class Runway
     private Aircraft? CurrentAircraft;
     private int TicksAvailability;
     private int currentTicks;
+    private int num;
 
     public Runway(string id)
     {
