@@ -142,17 +142,23 @@ public class CommercialAircraft : Aircraft //Commercial Aircraft subclass added 
 
 public class CargoAircraft : Aircraft //Cargo Aircraft subclass added by inheritance
 {
-    private double maximumLoad;
+    private double maximumLoad; //Specific attribute of the Cargo Aircraft 
 
     public CargoAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, double maximumLoad) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
     {
         this.maximumLoad = maximumLoad;
     }
 
-    public override void ShowInfo() //We call the ShowInfo method in order to show the Status of the Cargo Aircraft
+    public double GetMaximumLoad()
+    {
+        return this.maximumLoad;
+    }
+
+    public override void ShowInfo() //We call the ShowInfo method in order to show info about the Cargo Aircraft
     {
         Console.WriteLine($"Cargo Aircraft ID: {getID()}");
         Console.WriteLine($"Maximum load of the Cargo Aircraft: {maximumLoad}");
+        Console.WriteLine($"Cargo Aircraft speed: {getSpeed()}");
         Console.WriteLine($"Cargo Aircraft Status: {getStatus()}");
     }
 
