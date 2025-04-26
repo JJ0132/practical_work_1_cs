@@ -117,3 +117,20 @@ public abstract class Aircraft
     public abstract void ShowInfo();
 }
 
+public class CommercialAircraft : Aircraft //Commercial Aircraft subclass added by inheritance 
+{
+    private int numOfPassengers;
+
+    public CommercialAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, int numOfPassengers) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    {
+        this.numOfPassengers = numOfPassengers;
+    }
+
+    public override void ShowInfo() //We call the ShowInfo method in order to show the Status of the Commercial Aircraft
+    {
+        Console.WriteLine($"Commercial Aircraft ID: {getID()}");
+        Console.WriteLine($"Passengers: {numOfPassengers}");
+        Console.WriteLine($"Commercial Aircraft Status: {getStatus()}");
+    }
+}
+
