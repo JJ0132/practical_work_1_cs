@@ -117,7 +117,7 @@ public abstract class Aircraft
     public abstract void ShowInfo();
 }
 
-public class CommercialAircraft : Aircraft
+public class CommercialAircraft : Aircraft //Commercial Aircraft subclass added by inheritance 
 {
     private int numOfPassengers;
 
@@ -125,9 +125,16 @@ public class CommercialAircraft : Aircraft
     {
         this.numOfPassengers = numOfPassengers;
     }
+
+    public override void ShowInfo() //We call the ShowInfo method in order to show the Status of the Commercial Aircraft
+    {
+        Console.WriteLine($"Commercial Aircraft ID: {getID()}");
+        Console.WriteLine($"Passengers: {numOfPassengers}");
+        Console.WriteLine($"Commercial Aircraft Status: {getStatus()}");
+    }
 }
 
-public class CargoAircraft : Aircraft
+public class CargoAircraft : Aircraft //Cargo Aircraft subclass added by inheritance
 {
     private double maximumLoad;
 
@@ -136,14 +143,28 @@ public class CargoAircraft : Aircraft
         this.maximumLoad = maximumLoad;
     }
 
+    public override void ShowInfo() //We call the ShowInfo method in order to show the Status of the Cargo Aircraft
+    {
+        Console.WriteLine($"Cargo Aircraft ID: {getID()}");
+        Console.WriteLine($"Maximum load of the Cargo Aircraft: {maximumLoad}");
+        Console.WriteLine($"Cargo Aircraft Status: {getStatus()}");
+    }
+
 }
 
-public class PrivateAircraft : Aircraft
+public class PrivateAircraft : Aircraft //Private Aircraf subclass added by inheritance
 {
     private string Owner;
 
     public PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
     {
         this.Owner = Owner;
+    }
+
+    public override void ShowInfo() //We call the ShowInfo method in order to show the Status of the Private Aircraft
+    {
+        Console.WriteLine($"Private Aircraft ID: {getID()}");
+        Console.WriteLine($"Owner of the Private Aircraft: {Owner}");
+        Console.WriteLine($"Private Aircraft Status: {getStatus()}");
     }
 }
