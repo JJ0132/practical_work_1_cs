@@ -116,3 +116,34 @@ public abstract class Aircraft
 
     public abstract void ShowInfo();
 }
+
+public class CommercialAircraft : Aircraft
+{
+    private int numOfPassengers;
+
+    public CommercialAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, int numOfPassengers) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    {
+        this.numOfPassengers = numOfPassengers;
+    }
+}
+
+public class CargoAircraft : Aircraft
+{
+    private double maximumLoad;
+
+    public CargoAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, double maximumLoad) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    {
+        this.maximumLoad = maximumLoad;
+    }
+
+}
+
+public class PrivateAircraft : Aircraft
+{
+    private string Owner;
+
+    public PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    {
+        this.Owner = Owner;
+    }
+}
