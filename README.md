@@ -1,7 +1,7 @@
-# practical_work_1_cs
+# Practical Work 1 C# (Group 7)
 This is the repository of the practical work 1 in C#. 
 
-This repo contains all the work done by steps and the solution for the work.
+It contains all the work done by steps and the solution for the work.
 
 # Landing simulator software (Practical Work I)
 
