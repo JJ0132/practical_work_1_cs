@@ -23,9 +23,9 @@ public abstract class Aircraft
     private double CurrentFuel;
 
     
-    public Aircraft(string id,int Distance,int Speed, double FuelCapacity,double FuelConsumption,double CurrentFuel)
+    public Aircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, EStatus status, double CurrentFuel)
     {
-        this.Status = EStatus.InFlight;
+        this.Status = status;
         this.ID = id;
         this.Distance = Distance;
         this.Speed = Speed;
@@ -34,7 +34,7 @@ public abstract class Aircraft
         this.CurrentFuel = CurrentFuel;
     }
 
-    public Aircraft(string id,int Distance,int Speed, double FuelCapacity,double FuelConsumption, EStatus Status)
+    public Aircraft(string id,int Distance,int Speed, double FuelCapacity, double FuelConsumption, EStatus Status)
     {
         this.Status = Status;
         this.ID = id;
@@ -121,11 +121,17 @@ public class CommercialAircraft : Aircraft //Commercial Aircraft subclass added 
 {
     private int numOfPassengers; //Specific attribute of the Commercial Aircraft
 
-    public CommercialAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, int numOfPassengers) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel, Status)
+    public CommercialAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, EStatus status, double CurrentFuel, int numOfPassengers) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, status, CurrentFuel)
     {
         this.numOfPassengers = numOfPassengers;
     }
-    
+
+    public CommercialAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, EStatus status, int numOfPassengers) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, status)
+    {
+        this.numOfPassengers = numOfPassengers;
+    }
+
+
     public int GetNumOfPassengers()
     {
         return this.numOfPassengers;
@@ -144,10 +150,16 @@ public class CargoAircraft : Aircraft //Cargo Aircraft subclass added by inherit
 {
     private double maximumLoad; //Specific attribute of the Cargo Aircraft 
 
-    public CargoAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, double maximumLoad) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    public CargoAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, EStatus status, double CurrentFuel, double maximumLoad) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, status, CurrentFuel)
     {
         this.maximumLoad = maximumLoad;
     }
+
+    public CargoAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, EStatus status, double maximumLoad) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, status)
+    {
+    this.maximumLoad = maximumLoad;
+    }
+
 
     public double GetMaximumLoad()
     {
@@ -168,15 +180,16 @@ public class PrivateAircraft : Aircraft //Private Aircraf subclass added by inhe
 {
     private string Owner; //Specific attribute of the Private Aircraft
 
-    public PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    public PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, EStatus status, double CurrentFuel, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, status, CurrentFuel)
     {
         this.Owner = Owner;
     }
 
-    public PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, EStatus status, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    public PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, EStatus status, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, status)
     {
         this.Owner = Owner;
     }
+
 
     public override void ShowInfo() //We call the ShowInfo method in order to show info about the Private Aircraft
     {

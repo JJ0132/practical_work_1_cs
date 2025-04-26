@@ -1,3 +1,4 @@
+namespace airport_sim;
 public class Airport
 {
     private Runway[,] Runways;
@@ -151,7 +152,7 @@ public class Airport
     }
 
     private void GetDataByUser(ref string id, ref int distance, ref int speed, 
-        ref double fuelCapacity, ref double fuelConsumption, ref double currentFuel)
+        ref double fuelCapacity, ref double fuelConsumption, ref EStatus status, ref double currentFuel)
     {
             //Pedir usuario datos avión
             Console.Write("ID: ");
@@ -194,8 +195,9 @@ public class Airport
                     string id = "";
                     int distance = 0, speed = 0;
                     double fuelCapacity = 0, fuelConsumption = 0, currentFuel = 0;
+                    EStatus status = EStatus.InFlight;
 
-                    GetDataByUser(ref id, ref distance, ref speed, ref fuelCapacity, ref fuelConsumption, ref currentFuel);
+                    GetDataByUser(ref id, ref distance, ref speed, ref fuelCapacity, ref fuelConsumption, ref status, ref currentFuel);
                     Aircraft? r = null;
 
                     switch(option)
@@ -204,18 +206,18 @@ public class Airport
                             double cargo = ReadDouble("Máximo cargo: ");
                             
                             //Creas objeto
-                            r = new CargoAircraft(id, distance, speed, fuelCapacity, fuelConsumption, currentFuel, cargo);
+                            r = new CargoAircraft(id, distance, speed, fuelCapacity, fuelConsumption, status, currentFuel, cargo);
                             break;
                         case 2:
                             int numOfPassengers = ReadInt("Num. of passengers: ");
 
-                            r = new CommercialAircraft(id, distance, speed, fuelCapacity, fuelConsumption, currentFuel, numOfPassengers);
+                            r = new CommercialAircraft(id, distance, speed, fuelCapacity, fuelConsumption, status, currentFuel, numOfPassengers);
                             break;
                         case 3:
                             Console.Write("Owner: ");
                             string owner = Console.ReadLine() ?? string.Empty;
 
-                            r = new PrivateAircraft(id, distance, speed, fuelCapacity, fuelConsumption, currentFuel, owner);
+                            r = new PrivateAircraft(id, distance, speed, fuelCapacity, fuelConsumption, status, currentFuel, owner);
                             break;
                     }
 
@@ -259,7 +261,7 @@ public class Airport
                 LoadLine(separator, line);
             }
         }
-        catch(FileNotFoundException e)
+        catch(FileNotFoundException)
         {
             Console.WriteLine("ERROR: Fichero no encontrado");
         }
@@ -293,7 +295,7 @@ public class Airport
                 status = EStatus.Landing;
                 break;
             case "OnGround":
-                status = EStatus.Landing;
+                status = EStatus.OnGround;
                 break;
             default:
                 throw new ArgumentException("Status invalid");
@@ -311,18 +313,17 @@ public class Airport
         {
             case "Commercial":
                 int numOfPassengers = int.Parse(values[7]);
-                r = new CommercialAircraft(id, distance, speed, fuelCapacity, fuelConsumption,
-                    status, numOfPassengers);
+                r = new CommercialAircraft(id, distance, speed, fuelCapacity, fuelConsumption, status, numOfPassengers);
                 break;
+
             case "Cargo":
                 double maximumLoad = double.Parse(values[7]);
-                r = new CargoAircraft(id, distance, speed, fuelCapacity, fuelConsumption,
-                    status, maximumLoad);
+                r = new CargoAircraft(id, distance, speed, fuelCapacity, fuelConsumption, status, maximumLoad);
                 break;
+                
             case "Private":
                 string owner = values[7];
-                r = new PrivateAircraft(id, distance, speed, fuelCapacity, fuelConsumption,
-                    status, owner);
+                r = new PrivateAircraft(id, distance, speed, fuelCapacity, fuelConsumption, status, owner);
                 break;
             default:
                 throw new ArgumentException("Type of aircraft invalid");
