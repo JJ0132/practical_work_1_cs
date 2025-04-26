@@ -166,17 +166,23 @@ public class CargoAircraft : Aircraft //Cargo Aircraft subclass added by inherit
 
 public class PrivateAircraft : Aircraft //Private Aircraf subclass added by inheritance
 {
-    private string Owner;
+    private string Owner; //Specific attribute of the Private Aircraft
 
     public PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
     {
         this.Owner = Owner;
     }
 
-    public override void ShowInfo() //We call the ShowInfo method in order to show the Status of the Private Aircraft
+    public PrivateAircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, double CurrentFuel, EStatus status, string Owner) : base(id, Distance, Speed, FuelCapacity, FuelConsumption, CurrentFuel)
+    {
+        this.Owner = Owner;
+    }
+
+    public override void ShowInfo() //We call the ShowInfo method in order to show info about the Private Aircraft
     {
         Console.WriteLine($"Private Aircraft ID: {getID()}");
         Console.WriteLine($"Owner of the Private Aircraft: {Owner}");
+        Console.WriteLine($"Private Aircraft speed: {getSpeed()}");
         Console.WriteLine($"Private Aircraft Status: {getStatus()}");
     }
 }
