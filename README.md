@@ -40,7 +40,7 @@ The interaction of the user is really simple as it has to choose firstly if it w
 
 # Class Diagram
 
-![Class Diagram]("C:\Users\Alonso\OneDrive - UFV\Documentos\POO\Practical work 1\practical_work_1_cs-3\Class_Diagram.png")
+![Class Diagram](Class_Diagram.png)
 
 
 # Problems 
