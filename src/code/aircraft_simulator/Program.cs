@@ -5,9 +5,12 @@ namespace airport_sim;
 
 public class Program
 {
+    static Airport airport = new Airport();
 
+    //The menu
     public static void PrintMenu()
     {
+        Console.Clear();
         Console.WriteLine("");
         Console.WriteLine("");
         Console.WriteLine("--------------------------------");
@@ -25,36 +28,161 @@ public class Program
         Console.WriteLine("");
     }
 
+    //The selection to load a file (.csv) with flights 
     public static void LoadFiles()
     {
         Console.WriteLine("Insert the file");
 
+        try
+        {
+            airport.LoadAircraftFromFile();
+            Console.WriteLine("Files succesfully loaded from the file");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"ERROR!!!! {ex.Message}");
+        }
     }
-
+    
+    //This is the selection of load manually 
     public static void LoadFlight()
     {
         Console.WriteLine("Loading your flights manually");
         Console.WriteLine("Select your aircraft");
 
-        SubMenu();
-    }
+        int finalElection = SubMenu(); 
+        
+        Console.Write("ID: ");
+        string id = Console.ReadLine() ?? "";
+        
+        Console.Write("Distance (km): ");
+        int distance = int.Parse(Console.ReadLine() ?? "0");
+
+        Console.Write("Speed (km/h): ");
+        int speed = int.Parse(Console.ReadLine() ?? "0");
+
+        Console.Write("Fuel capacity (liters): ");
+        double fuelCapacity = double.Parse(Console.ReadLine() ?? "0");
+
+        Console.Write("Fuel consumption (liters/km): ");
+        double fuelConsumption = double.Parse(Console.ReadLine() ?? "0");
+
+        Console.Write("Current fuel (liters): ");
+        double currentFuel = double.Parse(Console.ReadLine() ?? "0");
+
+        
+        Aircraft? aircraft = null;
+        EStatus status = EStatus.InFlight;
+
+        if (finalElection == 1)
+        {
+            Console.Write("Number of passengers: ");
+            int numPassengers = int.Parse(Console.ReadLine() ?? "0");
+            aircraft = new CommercialAircraft(id, distance, speed, fuelCapacity, fuelConsumption, status, currentFuel, numPassengers);
+        }
+        else if (finalElection == 2)
+        {
+            Console.Write("Maximum load (kg): ");
+            double maxLoad = double.Parse(Console.ReadLine() ?? "0");
+            aircraft = new CargoAircraft(id, distance, speed, fuelCapacity, fuelConsumption, status, currentFuel, maxLoad);
+        }
+        else if (finalElection == 3)
+        {
+            Console.Write("Owner name: ");
+            string owner = Console.ReadLine() ?? "";
+            aircraft = new PrivateAircraft(id, distance, speed, fuelCapacity, fuelConsumption, status, currentFuel, owner);
+        }
+
+        if (aircraft != null)
+        {
+            airport.AddAircraftManually(aircraft);
+            Console.WriteLine("Aircraft added successfully!");
+        }
+
+        
+    }                    
 
     public static void StartSimManual()
     {
+        Console.Clear();
         Console.WriteLine("Starting simulation (manual)... ");
+        Console.WriteLine("Press ENTER to advance one tick, or type 'exit' to finish.");
 
+        string? input = "";
+
+        do
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine("Current Airport Status:");
+            airport.ShowStatus();
+            airport.ShowAircraftStatus(); 
+            Console.WriteLine("------------------------------------");
+
+            Console.WriteLine();
+            Console.Write("Press ENTER to advance tick, or type 'exit': ");
+            input = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(input))
+            {
+                airport.AdvanceTick(); 
+            }
+
+        } while (input != "exit");
+
+        Console.WriteLine("Manual simulation finalized.");
     }
 
     public static void StartSimAuto()
     {
-        Console.WriteLine("Starting simulation... ");
+        Console.Clear();
+        Console.WriteLine("Starting simulation (automatic)... ");
 
+        bool simulationRunning = true;
+        int tickCount = 0;
+
+        while (simulationRunning)
+        {
+            Console.Clear();
+            Console.WriteLine($"Tick #{tickCount + 1}");
+
+            airport.AdvanceTick(); 
+
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine("Current Airport Status:");
+            airport.ShowStatus(); //To show the runaway status
+            airport.ShowAircraftStatus(); //To show the aircraft status
+            Console.WriteLine("------------------------------------");
+
+            //It delays 2.5s the ticks
+            Thread.Sleep(2500);
+
+            //See if all aircrafts are on ground
+            simulationRunning = !AllAircraftsOnGround();
+
+            tickCount++;
+        }
+
+        Console.WriteLine("All aircrafts are on the ground. Simulation finished!");
     }
 
-    public static void SubMenu()
+    //Checks if all the aircraft are on ground
+    public static bool AllAircraftsOnGround()
     {
+        foreach (Aircraft aircraft in airport.GetAircraftList())
+        {
+            if (aircraft.getStatus() != EStatus.OnGround)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
-
+    //The submenu to create aircrafts manually
+    public static int SubMenu()
+    {
         Console.Clear();
         Console.WriteLine("-------------------");
         Console.WriteLine("1. Commercial Aircraft");
@@ -62,16 +190,14 @@ public class Program
         Console.WriteLine("3. Private Aircraft");
         Console.WriteLine("-------------------");
 
-        
         string? input = Console.ReadLine();
         Console.WriteLine("");
         int election;
         bool rightNumber = int.TryParse(input, out election); 
         int finalElection = election;
 
-        while(!rightNumber)
+        while (!rightNumber || finalElection < 1 || finalElection > 3)
         {
-            
             Console.Clear();
             Console.WriteLine("-------------------");
             Console.WriteLine("1. Commercial Aircraft");
@@ -79,95 +205,59 @@ public class Program
             Console.WriteLine("3. Private Aircraft");
             Console.WriteLine("-------------------");
             Console.WriteLine("");
-            Console.WriteLine("ERROR. Please insert a number: ");
-            string? input2 = Console.ReadLine();
+            Console.WriteLine("ERROR. Please insert a valid number: ");
+            input = Console.ReadLine();
             Console.WriteLine("");
-            int election2;
-            bool rightNumber2 = int.TryParse(input2, out election2);
-
-            if (rightNumber2)
-            {
-                finalElection = election2;
-                break;
-            }
+            rightNumber = int.TryParse(input, out finalElection);
         }
 
-        if (finalElection < 0 || finalElection > 3)
-        {
-            Console.WriteLine("ERROR!! Invalid number. Try again later.");
-            throw new Exception();
-        }
-       
+        return finalElection;
     }
 
 
+    //Main
     public static void Main()
     {
+        airport.setRunway(new Runway("Runway1"), 0, 0);
 
-        // The print of the menu
-        PrintMenu();
+        int finalElection = 0;
 
-        // Variables for the input
-        string? input = Console.ReadLine();
-        Console.WriteLine("");
-        int election;
-        bool rightNumber = int.TryParse(input, out election); // TryParse to verify that the input is a integer and not another type of data
-        int finalElection; // This variable is for saving the final checked election
-
-
-        // This logic checks the inputs of the user to not get wrong inputs such as an "A" instead of an integer or numbers going away of the range of the menu
-        if (rightNumber) // This checks if the input is an integer or not
+        do
         {
+            // Print the menu
+            PrintMenu();
 
-            finalElection = election; 
+            // Input reading
+            string? input = Console.ReadLine();
+            Console.WriteLine("");
 
-            if (election < 0 || election > 5) // Here we check the range of the number given
+            bool rightNumber = int.TryParse(input, out finalElection);
+
+            if (!rightNumber || finalElection < 1 || finalElection > 5)
             {
-
-                // This is for giving another try of putting a valid number
-                Console.WriteLine("Enter a valid number please (0-5)");
-                string? input2 = Console.ReadLine(); 
-                int election2;
-                bool secondCheck = int.TryParse(input2, out election2);
-
-                finalElection = election2;
-
-                if (secondCheck)
-                {
-
-                    if (election2 < 0 || election2 > 5)
-                    {
-                        Console.WriteLine("Not a valid election. Please try again later.");
-                        throw new ArgumentException(); // This throws an exception because the number was not in range of the menu
-                    }
-
-                } else {
-                    Console.WriteLine("Not a number. Please try again later.");
-                    throw new ArgumentOutOfRangeException(); // This and the next throw gives an exception because the input was away of the variable type
-                }
-
+                Console.WriteLine("Invalid input. Please select a number between 1 and 5.");
+                continue;
             }
 
-        } else {
-            Console.WriteLine("Not a number. Please, try again later.");
-            throw new ArgumentOutOfRangeException();
-        }
+            switch (finalElection)
+            {
+                case 1:
+                    LoadFiles();
+                    break;
+                case 2:
+                    LoadFlight();
+                    break;
+                case 3:
+                    StartSimManual();
+                    break;
+                case 4:
+                    StartSimAuto();
+                    break;
+                case 5:
+                    Console.WriteLine("Exiting the program...");
+                    break;
+            }
 
-        
-        // Here some logic to control the user election, for example, if user select 3, this will call the StartSimManual method
-        if (finalElection == 1)
-        {
-            LoadFiles();
-        } else if (finalElection == 2) {
-            LoadFlight();
-        } else if (finalElection == 3) {
-            StartSimManual();
-        } else if (finalElection == 4) {
-            StartSimAuto();
-        } else {
-            Console.WriteLine("Finishing the program...");
-        }
-        
-        
+        } while (finalElection != 5);
     }
 }

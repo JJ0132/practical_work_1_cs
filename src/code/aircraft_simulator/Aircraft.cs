@@ -11,16 +11,16 @@ public abstract class Aircraft
 {
     private string ID;
     private EStatus Status;
-    // in km
-    private int Distance;
-    //in km/h
-    private int Speed; 
-    //in liters
-    private double FuelCapacity;
-    //in liters/km
-    private double FuelConsumption;
-    //in liters
-    private double CurrentFuel;
+    
+    private int Distance; // In km
+    
+    private int Speed; // In km/h
+    
+    private double FuelCapacity; // In liters
+    
+    private double FuelConsumption; // In liters/km
+    
+    private double CurrentFuel; // In liters
 
     
     public Aircraft(string id, int Distance, int Speed, double FuelCapacity, double FuelConsumption, EStatus status, double CurrentFuel)

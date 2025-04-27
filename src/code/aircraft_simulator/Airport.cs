@@ -24,86 +24,121 @@ public class Airport
             {
                 Runway r = Runways[i, j];
 
-                // La pista existe
+                // We confirm that the runway exists
                 if(r != null)
                 {
-                    Console.Write($"Pista {r.getID()}. Estado: ");
+                    Console.Write($"Runaway {r.getID()}. Status: ");
                     if(r.getStatus() == RunwayStatus.Occupied)
                     {
-                        Console.Write("Ocupada. ");
+                        Console.Write("Busy. ");
                         Aircraft? currentAircraft = r.getAircraft();
 
                         if(currentAircraft != null)
                         {
-                            Console.Write($"Avión: {currentAircraft.getID()}. Ticks restantes: {r.getCurrentTicks()}\n");
+                            Console.Write($"Flight: {currentAircraft.getID()}. Remaining ticks: {r.getCurrentTicks()}\n");
                         }
                     }
                     else 
                     {
-                        Console.Write("Libre\n");
+                        Console.Write("Free\n");
                     }
                 }
             }
         }
     }
 
+    //This method is needed to stop the automatic simulation when all the aircrafts are on ground
+    public List<Aircraft> GetAircraftList()
+    {
+        return this.Aircrafts;
+    }
+
+    //To show the status if the aircrafts each tick
+    public void ShowAircraftStatus()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Aircrafts Status:");
+
+        foreach (Aircraft aircraft in this.Aircrafts)
+        {
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine($"Aircraft ID: {aircraft.getID()}");
+            Console.WriteLine($"Status: {aircraft.getStatus()}");
+            Console.WriteLine($"Distance remaining: {aircraft.getDistance()} km");
+            Console.WriteLine($"Current fuel: {aircraft.getCurrentFuel()} liters");
+        }
+    }
+
+    //The method for the manual simulation (third option in the menu)
     public void AdvanceTick()
     {
-        //Update Runway
-        for(int i = 0; i < 10; i++)
+        // Update Runways first
+        for (int i = 0; i < 10; i++)
         {
-            for(int j = 0; j < 10; j++)
+            for (int j = 0; j < 10; j++)
             {
                 Runway r = this.Runways[i, j];
 
-                if(r != null)
+                if (r != null)
                 {
-                    if(r.updateRunway() == 0 && r.getAircraft() != null)
+                    if (r.updateRunway() == 0 && r.getAircraft() != null)
                     {
                         r.ReleaseRunway();
                     }
-
-                    r.ShowInfo();
                 }
             }
-        } 
+        }
 
-        //Update Aircraft
-        foreach(Aircraft r in this.Aircrafts)
+        // Update Aircrafts
+        foreach (Aircraft r in this.Aircrafts)
         {
-            //Distancia recorrida
+            // Calculates the distance that the aircraft has followed in 15 minutes.
             int distance = (int)(r.getSpeed() * 0.25);
 
-            if(r.getStatus() == EStatus.InFlight || r.getStatus() == EStatus.Waiting)
+            // The distance is updated only if the aircraft is in Flight or Waiting.
+            if (r.getStatus() == EStatus.InFlight || r.getStatus() == EStatus.Waiting)
             {
                 r.setDistance(r.getDistance() - distance);
+
+                // We confirm that there is no negative distance
+                if (r.getDistance() < 0)
+                    r.setDistance(0);
             }
 
-            if(r.getStatus() != EStatus.OnGround)
+            // It only consumes fuel if the aircraft is not on Ground
+            if (r.getStatus() != EStatus.OnGround)
             {
                 double consumption = r.getFuelConsumption() * distance;
                 r.setCurrentFuel(r.getCurrentFuel() - consumption);
-            }
-            //Distancia recorrida
 
-            if(r.getDistance() == 0 && r.getStatus() == EStatus.InFlight)
+                if (r.getCurrentFuel() < 0)
+                    r.setCurrentFuel(0);
+            }
+
+            // It changes the status of the aircraft depending on the distance
+            if (r.getDistance() == 0 && r.getStatus() == EStatus.InFlight)
             {
                 r.setStatus(EStatus.Waiting);
             }
-            else if(r.getStatus() == EStatus.Waiting)
+            else if (r.getStatus() == EStatus.Waiting)
             {
-                //Search free runway
                 Runway? freeRunway = SearchRunway();
-                if(freeRunway != null)
+
+                if (freeRunway != null)
                 {
-                    freeRunway.RequestRunway(r);
+                    freeRunway.RequestRunway(r); // It assigns a runway and changes to Landing
+                }
+                else
+                {
+                    Console.WriteLine($"[INFO] No free runway available for aircraft {r.getID()}. Still waiting...");
                 }
             }
 
-            r.ShowInfo();
         }
     }
 
+
+    //This method is for search runaways that are free due to arrive the airplanes
     private Runway? SearchRunway()
     {
         for(int i = 0; i < 10; i++)
@@ -151,6 +186,7 @@ public class Airport
         }
     }
 
+    //This is the constructor of the aircrafts that are created to save all the values into it.
     private void GetDataByUser(ref string id, ref int distance, ref int speed, 
         ref double fuelCapacity, ref double fuelConsumption, ref EStatus status, ref double currentFuel)
     {
@@ -168,6 +204,7 @@ public class Airport
             currentFuel = ReadDouble("Current Fuel: ");
     }
 
+    //This method is for the creation of the aircrafts manually
     public void AddAircraft()
     {
         bool secondRound = false;
@@ -238,10 +275,12 @@ public class Airport
         } while(secondRound);   
     }
 
+    //This method is for the first option of the menu
     public void LoadAircraftFromFile()
     {
         StreamReader? sr = null;
 
+        //With the try and catches we ensure that the file is correct
         try
         {
             Console.Write("Input a file path: ");
@@ -263,17 +302,24 @@ public class Airport
         }
         catch(FileNotFoundException)
         {
-            Console.WriteLine("ERROR: Fichero no encontrado");
+            Console.WriteLine("ERROR: Unfound file");
         }
         catch(ArgumentException)
         {
-            Console.WriteLine("ERROR: Fichero no introducido");
+            Console.WriteLine("ERROR: Unfound file");
         }
         finally
         {
             if(sr != null) sr.Close();
         }
     }
+
+    //This method is for the second one in the menu. This add the aircraft created manually to the list of aircrafts to simule later.
+    public void AddAircraftManually(Aircraft aircraft)
+    {
+        this.Aircrafts.Add(aircraft);
+    }
+
 
     private void LoadLine(string separator, string line)
     {
