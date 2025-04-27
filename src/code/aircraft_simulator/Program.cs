@@ -134,7 +134,7 @@ public class Program
         Console.WriteLine("Manual simulation finalized.");
     }
 
-    public static void StartSimAuto()
+    public static void StartSimAuto() // Method for the automatic simulation
     {
         Console.Clear();
         Console.WriteLine("Starting simulation (automatic)... ");
@@ -149,7 +149,7 @@ public class Program
 
             airport.AdvanceTick(); 
 
-            Console.WriteLine("------------------------------------");
+            Console.WriteLine("------------------------------------"); 
             Console.WriteLine("Current Airport Status:");
             airport.ShowStatus(); //To show the runaway status
             airport.ShowAircraftStatus(); //To show the aircraft status

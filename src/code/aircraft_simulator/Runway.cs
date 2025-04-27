@@ -1,10 +1,10 @@
-public enum RunwayStatus
+public enum RunwayStatus // The different status of the Runway
 {
     Free,
     Occupied
 }
 
-public class Runway
+public class Runway  
 {
     private string id;
     private RunwayStatus Status;
@@ -64,7 +64,7 @@ public class Runway
         }
     }
 
-    public int updateRunway()
+    public int updateRunway() // It updates the Runway status after releasing it
     {
         if(this.CurrentAircraft != null)
         {
@@ -80,7 +80,7 @@ public class Runway
         return this.CurrentTicks;
     }
 
-    public void ShowInfo()
+    public void ShowInfo() // Show the Runway Status cases
     {
         Console.Write(id);
         switch(Status)
